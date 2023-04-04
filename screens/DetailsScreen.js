@@ -25,7 +25,7 @@ const DetailsScreen = () => {
 
   const [plateNr, setPlateNr] = useState("FOO 123");
   const [personalNr, setPersonalNr] = useState("30000000000");
-  const [selectedMonth, setSelectedMonth] = useState("6 mėnesiai");
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -39,18 +39,41 @@ const DetailsScreen = () => {
     { id: 5, name: "12 mėnesiu", duration: 12 },
   ];
 
-  const selectMonth = (monthName) => {
-    setSelectedMonth(monthName);
-    console.log(monthName);
+  const selectMonth = (duration) => {
+    setSelectedMonth(duration);
+
+    const newDate = addMonths(selectedDate, duration);
+    const formattedDate = formatDate(newDate);
+    console.log(formattedDate);
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month < 10 ? "0" + month : month}-${
+      day < 10 ? "0" + day : day
+    }`;
+  };
+
+  const addMonths = (date, months) => {
+    const newDate = new Date(date);
+    const currentMonth = newDate.getMonth();
+    newDate.setMonth(currentMonth + months);
+
+    if (
+      newDate.getMonth() < currentMonth &&
+      newDate.getFullYear() <= date.getFullYear()
+    ) {
+      newDate.setFullYear(date.getFullYear() + 1);
+    }
+
+    return newDate;
   };
 
   const handleDateChange = (event, date) => {
     setSelectedDate(date || selectedDate);
     setShowDatePicker(false);
-    console.log(plateNr);
-    console.log(personalNr);
-    console.log(selectedDate);
-    console.log(selectedMonth);
   };
 
   const goToProviders = () => {
@@ -156,7 +179,7 @@ const DetailsScreen = () => {
                   styles.month,
                   selectedMonth === item.name && { backgroundColor: "#333333" },
                 ]}
-                onPress={() => selectMonth(item.name)}
+                onPress={() => selectMonth(item.duration)}
               >
                 <Text
                   style={[

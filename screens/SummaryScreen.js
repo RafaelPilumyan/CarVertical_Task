@@ -1,15 +1,14 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
-import { UseGetAllProviders } from "../hooks/getAllProviders";
 import LoadingScreen from "./LoadingScreen";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
-import OfferCardComponent from "../components/OfferCardComponent";
 import { useNavigation } from "@react-navigation/native";
+import SummaryComponent from "../components/SummaryComponent";
 
-const OffersScreen = () => {
-  const { data, isLoading } = UseGetAllProviders();
+const SummaryScreen = () => {
+  const [showLoading, setShowLoading] = useState(true);
 
   const navigation = useNavigation();
 
@@ -18,11 +17,19 @@ const OffersScreen = () => {
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
   });
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
-      {isLoading ? (
+      {showLoading ? (
         <LoadingScreen />
-      ) : data ? (
+      ) : (
         <LinearGradient
           colors={[
             "hsl(190, 91%, 58%)",
@@ -46,34 +53,14 @@ const OffersScreen = () => {
                 <AntDesign name="left" size={16} color="#fff" />
               </Pressable>
               <View style={{ flex: 1 }}>
-                <Text style={styles.textCenter}>Draudimo pasiūlymai</Text>
+                <Text style={styles.textCenter}>Užsakymo patvirtinimas</Text>
               </View>
             </View>
-
-            <View style={{ marginTop: 44 }}>
-              <Text style={styles.textBold}>
-                Privalomojo draudimo pasiūlymai
-              </Text>
-            </View>
-            <View style={{ marginTop: 8 }}>
-              <Text style={styles.textCenter}>
-                Išsirinkite geriausiai jūsų poreikius atitinkantį draudimo
-                pasiūlymąhtg
-              </Text>
-            </View>
-            <View style={{ marginTop: 32 }}>
-              <FlatList
-                data={data}
-                renderItem={({ item }) => <OfferCardComponent data={item} />}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-              />
+            <View style={{ marginTop: 24 }}>
+              <SummaryComponent />
             </View>
           </View>
         </LinearGradient>
-      ) : (
-        <Text>No Data</Text>
       )}
     </View>
   );
@@ -106,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OffersScreen;
+export default SummaryScreen;

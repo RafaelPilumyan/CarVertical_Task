@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
@@ -38,9 +32,9 @@ const LoadingScreen = () => {
       style={{ flex: 1 }}
     >
       <View style={styles.container}>
-        <View>
-          <Text style={styles.textCenter}>Draudimas</Text>
-        </View>
+        <Text style={styles.textBold}>
+          Ieškome geriausių draudimo pasiūlymų
+        </Text>
       </View>
     </LinearGradient>
   );
@@ -51,12 +45,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  textCenter: {
+  textBold: {
     color: "#fff",
-    fontFamily: "Poppins-Regular",
-    fontSize: 16,
-    lineHeight: 24,
+    fontFamily: "Poppins-Bold",
+    fontSize: 24,
+    lineHeight: 32,
     textAlign: "center",
   },
 });
