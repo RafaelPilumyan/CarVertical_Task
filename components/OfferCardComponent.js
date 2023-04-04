@@ -1,15 +1,18 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const OfferCardComponent = ({ data }) => {
-  //console.log(data.insurer);
+const OfferCardComponent = ({ data, routeDate }) => {
+  // console.log(routeDate);
+  // console.log(data.insurer.id);
   const navigation = useNavigation();
 
   const goToSummary = () => {
-    setShowLoading(false);
-    navigation.navigate("Summary");
+    navigation.navigate("Summary", {
+      providerData: data,
+      routeDate: routeDate,
+    });
   };
 
   return (

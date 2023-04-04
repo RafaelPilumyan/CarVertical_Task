@@ -1,15 +1,18 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { UseGetAllProviders } from "../hooks/getAllProviders";
 import LoadingScreen from "./LoadingScreen";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import OfferCardComponent from "../components/OfferCardComponent";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const OffersScreen = () => {
   const { data, isLoading } = UseGetAllProviders();
+  const route = useRoute();
+  // console.log(route.params);
+  const routeDate = route.params;
 
   const navigation = useNavigation();
 
@@ -64,7 +67,9 @@ const OffersScreen = () => {
             <View style={{ marginTop: 32 }}>
               <FlatList
                 data={data}
-                renderItem={({ item }) => <OfferCardComponent data={item} />}
+                renderItem={({ item }) => (
+                  <OfferCardComponent routeDate={routeDate} data={item} />
+                )}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 ItemSeparatorComponent={() => <View style={{ width: 8 }} />}

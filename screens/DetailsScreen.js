@@ -10,7 +10,7 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -25,9 +25,20 @@ const DetailsScreen = () => {
 
   const [plateNr, setPlateNr] = useState("FOO 123");
   const [personalNr, setPersonalNr] = useState("30000000000");
-  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(6);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [formattedDate, setFormattedDate] = useState("");
+
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth() + 1;
+  const day = selectedDate.getDate();
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const futureDate = addMonths(currentDate, selectedMonth);
+    setFormattedDate(formatDate(futureDate));
+  }, [selectedMonth]);
 
   const navigation = useNavigation();
 
@@ -43,8 +54,7 @@ const DetailsScreen = () => {
     setSelectedMonth(duration);
 
     const newDate = addMonths(selectedDate, duration);
-    const formattedDate = formatDate(newDate);
-    console.log(formattedDate);
+    setFormattedDate(formatDate(newDate));
   };
 
   const formatDate = (date) => {
@@ -74,15 +84,27 @@ const DetailsScreen = () => {
   const handleDateChange = (event, date) => {
     setSelectedDate(date || selectedDate);
     setShowDatePicker(false);
+    //console.log(date);
   };
 
   const goToProviders = () => {
-    navigation.navigate("Offers");
+    navigation.navigate("Offers", {
+      formattedDate: formattedDate,
+      year: year,
+      month: month,
+      day: day,
+    });
   };
 
   if (!fontsLoaded) {
     return <ActivityIndicator />;
   }
+
+  // console.log(plateNr);
+  // console.log(personalNr);
+  // console.log(selectedMonth);
+  // console.log(selectedDate);
+  // console.log(formattedDate);
 
   return (
     <LinearGradient
@@ -177,14 +199,16 @@ const DetailsScreen = () => {
               <TouchableOpacity
                 style={[
                   styles.month,
-                  selectedMonth === item.name && { backgroundColor: "#333333" },
+                  selectedMonth === item.duration && {
+                    backgroundColor: "#333333",
+                  },
                 ]}
                 onPress={() => selectMonth(item.duration)}
               >
                 <Text
                   style={[
                     styles.monthText,
-                    selectedMonth === item.name && { color: "#fff" },
+                    selectedMonth === item.duration && { color: "#fff" },
                   ]}
                 >
                   {item.name}
