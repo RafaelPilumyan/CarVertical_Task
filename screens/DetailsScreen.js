@@ -8,11 +8,14 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { FontAwesome5 } from "@expo/vector-icons";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useNavigation } from "@react-navigation/native";
 
 const DetailsScreen = () => {
   const [fontsLoaded] = useFonts({
@@ -22,18 +25,36 @@ const DetailsScreen = () => {
 
   const [plateNr, setPlateNr] = useState("FOO 123");
   const [personalNr, setPersonalNr] = useState("30000000000");
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("6 mėnesiai");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const navigation = useNavigation();
 
   const months = [
-    { id: 1, name: "1 mėnuo" },
-    { id: 2, name: "3 mėnesiai" },
-    { id: 3, name: "6 mėnesiai" },
-    { id: 4, name: "9 mėnesiai" },
-    { id: 5, name: "12 mėnesiu" },
+    { id: 1, name: "1 mėnuo", duration: 1 },
+    { id: 2, name: "3 mėnesiai", duration: 3 },
+    { id: 3, name: "6 mėnesiai", duration: 6 },
+    { id: 4, name: "9 mėnesiai", duration: 9 },
+    { id: 5, name: "12 mėnesiu", duration: 12 },
   ];
 
   const selectMonth = (monthName) => {
     setSelectedMonth(monthName);
+    console.log(monthName);
+  };
+
+  const handleDateChange = (event, date) => {
+    setSelectedDate(date || selectedDate);
+    setShowDatePicker(false);
+    console.log(plateNr);
+    console.log(personalNr);
+    console.log(selectedDate);
+    console.log(selectedMonth);
+  };
+
+  const goToProviders = () => {
+    navigation.navigate("Offers");
   };
 
   if (!fontsLoaded) {
@@ -74,8 +95,19 @@ const DetailsScreen = () => {
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Draudimo įsigaliojimo laikas</Text>
             <View style={styles.inputDateContainer}>
-              <Text style={styles.textBoldDate}>2022-04-20</Text>
-              <FontAwesome5 name="calendar-alt" size={16} color="#00ADEE" />
+              <Text style={styles.textBoldDate}>
+                {selectedDate.toLocaleDateString("en-CA").replace(/-/g, " ")}
+              </Text>
+              <Pressable onPress={() => setShowDatePicker(true)}>
+                <FontAwesome5 name="calendar-alt" size={16} color="#00ADEE" />
+              </Pressable>
+              <Modal visible={showDatePicker} animationType="slide">
+                <RNDateTimePicker
+                  mode="date"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </Modal>
             </View>
           </View>
           <View
@@ -140,7 +172,7 @@ const DetailsScreen = () => {
           />
         </View>
 
-        <Pressable style={styles.btnContainer}>
+        <Pressable style={styles.btnContainer} onPress={goToProviders}>
           <Text style={styles.btnText}>Toliau</Text>
         </Pressable>
       </SafeAreaView>
