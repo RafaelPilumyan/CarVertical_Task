@@ -84,7 +84,6 @@ const DetailsScreen = () => {
   const handleDateChange = (event, date) => {
     setSelectedDate(date || selectedDate);
     setShowDatePicker(false);
-    //console.log(date);
   };
 
   const goToProviders = () => {
@@ -99,12 +98,6 @@ const DetailsScreen = () => {
   if (!fontsLoaded) {
     return <ActivityIndicator />;
   }
-
-  // console.log(plateNr);
-  // console.log(personalNr);
-  // console.log(selectedMonth);
-  // console.log(selectedDate);
-  // console.log(formattedDate);
 
   return (
     <LinearGradient
